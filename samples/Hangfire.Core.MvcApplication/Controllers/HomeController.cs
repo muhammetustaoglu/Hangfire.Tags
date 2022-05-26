@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Hangfire.Core.MvcApplication.Models;
 using Hangfire.Server;
+using Hangfire.Tags;
 using Hangfire.Tags.Attributes;
 
 namespace Hangfire.Core.MvcApplication.Controllers
@@ -34,10 +36,30 @@ namespace Hangfire.Core.MvcApplication.Controllers
             return RedirectToAction("Index");
         }
 
-        [Tag("job", "{0}", "{1}")]
+        [HttpPost]
+        public ActionResult CreateALot()
+        {
+            for (var i = 0; i < 1000; i++)
+                BackgroundJob.Enqueue(() => Job("Home", null));
+            TextBuffer.WriteLine("Background jobs have been created.");
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Schedule()
+        {
+            BackgroundJob.Schedule(() => Job("Home", null), TimeSpan.FromMinutes(1));
+            TextBuffer.WriteLine("Background job has been scheduled.");
+
+            return RedirectToAction("Index");
+        }
+
+        [Tag("job", "{0}")]
         public void Job(string name, PerformContext ctx)
         {
-            TextBuffer.WriteLine("Background Job completed succesfully!");
+            // TextBuffer.WriteLine("Background Job completed succesfully!");
+            ctx.AddTags("finished");
         }
     }
 }
