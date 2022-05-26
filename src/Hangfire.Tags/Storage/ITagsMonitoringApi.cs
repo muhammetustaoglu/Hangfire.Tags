@@ -4,7 +4,7 @@ using Hangfire.Tags.Dashboard.Monitoring;
 
 namespace Hangfire.Tags.Storage
 {
-    internal interface ITagsMonitoringApi
+    public interface ITagsMonitoringApi
     {
         long GetTagsCount();
 
@@ -13,6 +13,8 @@ namespace Hangfire.Tags.Storage
         IDictionary<string, int> GetJobStateCount(string[] tags, int maxTags = 50);
 
         IEnumerable<TagDto> SearchWeightedTags(string tag = null);
+
+        IEnumerable<string> SearchRelatedTags(string tag);
 
         JobList<MatchingJobDto> GetMatchingJobs(string[] tags, int from, int count, string stateName = null);
     }
