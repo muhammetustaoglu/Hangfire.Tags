@@ -202,7 +202,7 @@ $@"
 select j.*, s.Reason as StateReason, s.Data as StateData
 from [{_options.SchemaName}].Job j with (nolock)
 inner join cte on cte.Id = j.Id
-inner join [{_options.SchemaName}].State s with (nolock) on j.StateId = s.Id and j.id = s.jobId
+inner join [{_options.SchemaName}].State s with (nolock) on j.StateId = s.Id and j.Id = s.jobId
 where cte.row_num between @start and @end
 order by j.Id desc";
 
